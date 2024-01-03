@@ -41,3 +41,9 @@ foreach ($Nic in $NicsWithWake) {
     write-host "Enabling for NIC" -ForegroundColor green
     Set-CimInstance $NIC -Property @{Enable = $true }
 }
+
+Get-NetAdapter -Name *ethernet* | Enable-NetAdapterPowerManagement -WakeOnMagicPacket
+# Set-NetAdapterAdvancedProperty -Name "Ethernet" -DisplayName "Energy-Efficient Ethernet" -DisplayValue "Disabled"
+Set-NetAdapterAdvancedProperty -Name "Ethernet" -DisplayName "Energy Efficient Ethernet" -DisplayValue "Off"
+ # TODO: Disable "Turn on fast startup (recommened)"
+ # TODO: Disable Fast Boot (maybe)
