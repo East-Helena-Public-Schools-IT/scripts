@@ -10,6 +10,7 @@ $HOME_PATH=$null
 $GROUPS = @()
 $OU=$null
 $CHANGE_PASSWORD_AT_LOGON=$null
+$DESCRIPTION=""
 
 function Set-GradYear() {
     Write-Host "Enter Graduation Year. If this is a teacher, just press enter."
@@ -72,6 +73,7 @@ if ($IS_TEACHER) {
                  "PPE",    "PPE",
                  "Eastgate", "Eastgate")
     $script:OU = "OU=$GRADY,OU=$($SCHOOLS[[int]$YTG]),OU=Students"
+    $script:DESCRIPTION=$GRADY
 }
 # TODO this name cannot be longer than 20 char combined when going in the -Name field. Shorted then
 $CONCAT_NAME=$($LNAME+$FNAME) -replace '[^a-zA-Z0-9\.]', ''
@@ -82,6 +84,7 @@ New-ADUser -HomeDrive "T:" `
     -GivenName $FNAME `
     -Surname $LNAME `
     -Name $CONCAT_NAME `
+    -Description $DESCRIPTION `
     -EmailAddress "$EMAIL@ehps.k12.mt.us" `
     -ScriptPath "logon.bat" `
     -Path "$OU,DC=ehps,DC=com" `
