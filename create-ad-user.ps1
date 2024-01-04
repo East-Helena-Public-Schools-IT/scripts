@@ -71,7 +71,8 @@ if ($IS_TEACHER) {
                  "Radley", "Radley", "Radley",
                  "PPE",    "PPE",
                  "Eastgate", "Eastgate")
-    $script:OU = "OU=$GRADY,OU=$SCHOOLS[$YTG],OU=Students"
+    $SCHOOL=$SCHOOLS[[int]$YTG]
+    $script:OU = "OU=$GRADY,OU=$SCHOOL,OU=Students"
 }
 
 New-ADUser -HomeDrive "T:" `
