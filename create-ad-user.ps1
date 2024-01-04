@@ -29,6 +29,7 @@ function Set-GradYear() {
 function Set-Name() {
     $script:FNAME = Read-Host "First Name"
     $script:LNAME = Read-Host "Last Name"
+    # TODO this name cannot be longer than 20 char combined when going in the -Name field. Shorted then
     if ($LNAME.Length -eq 0 -or $FNAME.Length -eq 0) {
         Write-Host "One of the names was empty, try again."
         Set-Name
@@ -80,7 +81,7 @@ New-ADUser -HomeDrive "T:" `
     -UserPrincipalName "$EMAIL@ehps.com" `
     -GivenName $FNAME `
     -Surname $LNAME `
-    -Name "$FNAME $LNAME" `
+    -Name "$LNAME$FNAME" `
     -EmailAddress "$EMAIL@ehps.k12.mt.us" `
     -ScriptPath "logon.bat" `
     -Path "$OU,DC=ehps,DC=com" `
