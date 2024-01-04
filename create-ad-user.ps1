@@ -8,6 +8,7 @@ $EMAIL=$null
 $IS_TEACHER=$null
 $HOME_PATH=$null
 $GROUPS = @()
+$OU=$null
 # Maybe options:
 # -ChangePasswordAtLogon $true
 # -AccountPassword SecureString
@@ -49,6 +50,7 @@ if ($IS_TEACHER) {
     $script:GROUPS += "Teacher" 
     $script:GROUPS += "PSO_Teachers" 
     $script:GROUPS += "GCDS_StandardStaff" 
+    $script:OU = "OU=Teachers"
 } else {
     # Student
     $script:EMAIL=$FNAME[0]+$LNAME+$GRADY[2]+$GRADY[3]
@@ -62,6 +64,15 @@ if ($IS_TEACHER) {
 
     # If student is > 3rd grade
     if ([int]$YEAR-[int]$GRADY+12 -gt 3) { $script:GROUPS += "GCDS_StandardStudent" }
+
+    # This is a dumb way to do this, but it requires "less" boiler-plate
+    $YTG = [int]$GRADY-[int]$YEAR
+    $SCHOOLS = @("EHHS",   "EHHS",   "EHHS",  "EHHS",
+                 "EVMS",   "EVMS",   "EVMS", 
+                 "Radley", "Radley", "Radley",
+                 "PPE",    "PPE",
+                 "Eastgate", "Eastgate")
+    $script:OU = "OU=$GRADY,OU=$SCHOOLS[$YTG],OU=Students"
 }
 
 New-ADUser -HomeDrive "T:" `
@@ -71,7 +82,7 @@ New-ADUser -HomeDrive "T:" `
     -Surname $LNAME `
     -EmailAddress "$EMAIL@ehps.k12.mt.us" `
     -ScriptPath "logon.bat" `
-    -Path "OU=,DC=ehps,DC=com" `
+    -Path "$OU,DC=ehps,DC=com" `
     -PassThru |
     ForEach-Object {
         ForEach ($G in $GROUPS) {
