@@ -12,30 +12,28 @@ $OU=$null
 # Maybe options:
 # -ChangePasswordAtLogon $true
 # -AccountPassword SecureString
-# TODO:
-# OUs
 
 function Set-GradYear() {
-    Write-Output "Enter Graduation Year. If this is a teacher, just press enter."
+    Write-Host "Enter Graduation Year. If this is a teacher, just press enter."
     $script:GRADY = Read-Host "YYYY"
 
     if ($GRADY.Length -eq 0) {
-        Write-Output "Creating Teacher..."
+        Write-Host "Creating Teacher..."
         $script:IS_TEACHER = $true
         return
     } else { $script:IS_TEACHER = $false }
     if ($GRADY.Length -ne 4) {
-        Write-Output "Please use YYYY format."
+        Write-Host "Please use YYYY format."
         Set-GradYear
     }
 }
 
 function Set-Name() {
-    Write-Output "Enter Name:"
+    Write-Host "Enter Name:"
     $script:FNAME = Read-Host "First Name"
     $script:LNAME = Read-Host "Last Name"
     if ($LNAME.Length -eq 0 -or $FNAME.Length -eq 0) {
-        Write-Output "One of the names was empty, try again."
+        Write-Host "One of the names was empty, try again."
         Set-Name
     }
 }
@@ -65,7 +63,7 @@ if ($IS_TEACHER) {
     # If student is > 3rd grade
     if ([int]$YEAR-[int]$GRADY+12 -gt 3) { $script:GROUPS += "GCDS_StandardStudent" }
 
-    # This is a dumb way to do this, but it requires "less" boiler-plate
+    # This is a dumb way to do this, but it requires "less" boiler-plate than checking every date range
     $YTG = [int]$GRADY-[int]$YEAR
     $SCHOOLS = @("EHHS",   "EHHS",   "EHHS",  "EHHS",
                  "EVMS",   "EVMS",   "EVMS", 
@@ -89,3 +87,5 @@ New-ADUser -HomeDrive "T:" `
             Add-ADGroupMember -Identity $G -Members $_
         }
     }
+
+Write-Host "Done, you need to do any changes to the password manually."
