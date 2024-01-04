@@ -29,7 +29,7 @@ function Set-GradYear() {
 }
 
 function Set-Name() {
-    Write-Host "Enter Name:"
+    Write-Host "Enter Person's Name."
     $script:FNAME = Read-Host "First Name"
     $script:LNAME = Read-Host "Last Name"
     if ($LNAME.Length -eq 0 -or $FNAME.Length -eq 0) {
