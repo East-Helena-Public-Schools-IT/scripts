@@ -23,7 +23,7 @@ function Set-GradYear() {
         $script:IS_TEACHER = $true
         return
     } else { $script:IS_TEACHER = $false }
-    if ($GRADY.Length -gt 4 -or $GRADY.Length -lt 4) {
+    if ($GRADY.Length -ne 4) {
         Write-Output "Please use YYYY format."
         Set-GradYear
     }
@@ -55,10 +55,13 @@ if ($IS_TEACHER) {
     $script:HOME_PATH="\\ehps-fs3\student\$GRADY\$LNAME$FNAME"
     $script:GROUPS += "Students"
 
-    # Calculate student's year
-    get-date -f yyyy
-    # only if 4+
-    $STUDENT_GROUPS += "GCDS_StandardStudent"
+    $YEAR=$null
+    # Calculate school year
+    if (get-date -f MM -gt 6) { $script:YEAR = $([int]$(get-date -f yyyy))+1 }
+    else { $script:YEAR = get-date -f yyyy }
+
+    # If student is > 3rd grade
+    if ([int]$YEAR-[int]$GRADY+12 -gt 3) { $script:GROUPS += "GCDS_StandardStudent" }
 }
 
 New-ADUser -HomeDrive "T:" `
