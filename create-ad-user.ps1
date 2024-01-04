@@ -9,6 +9,7 @@ $IS_TEACHER=$null
 $HOME_PATH=$null
 $GROUPS = @()
 $OU=$null
+$CHANGE_PASSWORD_AT_LOGON=$null
 # Maybe options:
 # -ChangePasswordAtLogon $true
 # -AccountPassword SecureString
@@ -29,7 +30,6 @@ function Set-GradYear() {
 }
 
 function Set-Name() {
-    Write-Host "Enter Person's Name."
     $script:FNAME = Read-Host "First Name"
     $script:LNAME = Read-Host "Last Name"
     if ($LNAME.Length -eq 0 -or $FNAME.Length -eq 0) {
@@ -40,6 +40,10 @@ function Set-Name() {
 
 Set-Name
 Set-GradYear
+
+$CNG_PASS_RESPONSE = Read-host "Should user change password at next logon? [y/N]"
+if ($CNG_PASS_RESPONSE -match "(y|Y)") { $script:CHANGE_PASSWORD_AT_LOGON=$true }
+else { $script:CHANGE_PASSWORD_AT_LOGON=$false }
 
 if ($IS_TEACHER) {
     # Teacher
@@ -78,9 +82,13 @@ New-ADUser -HomeDrive "T:" `
     -UserPrincipalName "$EMAIL@ehps.com" `
     -GivenName $FNAME `
     -Surname $LNAME `
+    -Name "$FNAME $LNAME" `
     -EmailAddress "$EMAIL@ehps.k12.mt.us" `
     -ScriptPath "logon.bat" `
     -Path "$OU,DC=ehps,DC=com" `
+    -Enabled $true `
+    -ChangePasswordAtLogon $CHANGE_PASSWORD_AT_LOGON `
+    -AccountPassword (Read-Host -AsSecureString "Password")
     -PassThru |
     ForEach-Object {
         ForEach ($G in $GROUPS) {
