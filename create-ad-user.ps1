@@ -85,7 +85,7 @@ New-ADUser -HomeDrive "T:" `
     -Path "$OU,DC=ehps,DC=com" `
     -Enabled $true `
     -ChangePasswordAtLogon $CHANGE_PASSWORD_AT_LOGON `
-    -AccountPassword (Read-Host -AsSecureString "Password")
+    -AccountPassword (Read-Host -AsSecureString "Password") `
     -PassThru |
     ForEach-Object {
         ForEach ($G in $GROUPS) {
