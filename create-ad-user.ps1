@@ -10,9 +10,6 @@ $HOME_PATH=$null
 $GROUPS = @()
 $OU=$null
 $CHANGE_PASSWORD_AT_LOGON=$null
-# Maybe options:
-# -ChangePasswordAtLogon $true
-# -AccountPassword SecureString
 
 function Set-GradYear() {
     Write-Host "Enter Graduation Year. If this is a teacher, just press enter."
