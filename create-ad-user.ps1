@@ -57,7 +57,7 @@ if ($IS_TEACHER) {
 
     $YEAR=$null
     # Calculate school year
-    if (get-date -f MM -gt 6) { $script:YEAR = $([int]$(get-date -f yyyy))+1 }
+    if ([int]$(get-date -f MM) -gt 6) { $script:YEAR = $([int]$(get-date -f yyyy))+1 }
     else { $script:YEAR = get-date -f yyyy }
 
     # If student is > 3rd grade
