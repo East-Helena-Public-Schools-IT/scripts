@@ -17,4 +17,4 @@ Bash (Linux / Mac):
 wget {url}
 ```
 
-Please note that some of the scripts have hard-coded values that are specific to our school district, such as (create-ad-user.ps1)[https://github.com/East-Helena-Public-Schools-IT/scripts/blob/main/create-ad-user.ps1]. This script has our school's names hard-coded into the script, but it should be trivial to modify it to your needs.
+Please note that some of the scripts have hard-coded values that are specific to our school district, such as [create-ad-user.ps1](https://github.com/East-Helena-Public-Schools-IT/scripts/blob/main/create-ad-user.ps1). This script has our school's names hard-coded into the script, but it should be trivial to modify it to your needs.
