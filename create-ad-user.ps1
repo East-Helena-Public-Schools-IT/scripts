@@ -81,6 +81,7 @@ $CONCAT_NAME=$($LNAME+$FNAME) -replace '[^a-zA-Z0-9\.]', ''
 New-ADUser -HomeDrive "T:" `
     -HomeDirectory $HOME_PATH  `
     -UserPrincipalName "$EMAIL@ehps.com" `
+    -sAMAccountName $($EMAIL -replace '[^a-zA-Z0-9\.]', '') `
     -GivenName $FNAME `
     -Surname $LNAME `
     -Name $CONCAT_NAME `
