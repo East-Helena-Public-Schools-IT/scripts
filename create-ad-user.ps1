@@ -108,7 +108,7 @@ New-ADUser -HomeDrive "T:" `
     -sAMAccountName $(if ($tmpsam.Length -gt 20) { $tmpsam.Substring(0, 20) } else { $tmpsam }) `
     -GivenName $FNAME `
     -Surname $LNAME `
-    -Name $($($LNAME+$FNAME) -replace '[^a-zA-Z0-9\.]', '') `
+    -Name $("$FNAME $LNAME" -replace '[^a-zA-Z0-9\. ]', '') `
     -Description $DESCRIPTION `
     -EmailAddress "$EMAIL@ehps.k12.mt.us" `
     -ScriptPath "logon.bat" `
