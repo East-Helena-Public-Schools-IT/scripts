@@ -85,7 +85,7 @@ function Get-AccountType() {
         $script:HOME_PATH="\\ehps-fs3\student\Classified Staff\"
         $script:GROUPS += "PSO_SupportStaff" 
         $script:GROUPS += "GCDS_StandardStaff" 
-        $script:OU = "OU=SupportStaff"
+        $script:OU = "OU=Support Staff"
         Set-Description
     }
     else {
