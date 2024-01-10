@@ -94,6 +94,8 @@ function Get-AccountType() {
     }
 }
 
+Get-AccountType
+
 $CNG_PASS_RESPONSE = Read-host "Should user change password at next logon? [y/N]"
 if ($CNG_PASS_RESPONSE -match "(y|Y)") { $script:CHANGE_PASSWORD_AT_LOGON=$true }
 else { $script:CHANGE_PASSWORD_AT_LOGON=$false }
