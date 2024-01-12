@@ -42,7 +42,6 @@ function Get-AccountType() {
 3) Non-Teaching Staff
 "
     $ACCOUNTTYPE = Read-Host "Choice"
-    Set-Name
 
     if ($ACCOUNTTYPE -match "1") {
         # Teacher
@@ -94,6 +93,8 @@ function Get-AccountType() {
     }
 }
 
+# Set-Name MUST come before Get-AccountType
+Set-Name
 Get-AccountType
 
 $CNG_PASS_RESPONSE = Read-host "Should user change password at next logon? [y/N]"
