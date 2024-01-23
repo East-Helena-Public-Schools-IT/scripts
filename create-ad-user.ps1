@@ -62,8 +62,8 @@ function Get-AccountType() {
 
         $YEAR=$null
         # Calculate school year
-        if ([int]$(get-date -f MM) -gt 6) { $script:YEAR = $([int]$(get-date -f yyyy))+1 }
-        else { $script:YEAR = get-date -f yyyy }
+        if ([int]$(get-date -f MM) -gt 6) { $YEAR = $([int]$(get-date -f yyyy))+1 }
+        else { $YEAR = get-date -f yyyy }
 
         # If student is > 3rd grade
         if ([int]$YEAR-[int]$GRADY+12 -gt 3) { $script:GROUPS += "GCDS_StandardStudent" }
