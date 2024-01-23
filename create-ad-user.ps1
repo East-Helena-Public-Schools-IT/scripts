@@ -103,25 +103,27 @@ else { $script:CHANGE_PASSWORD_AT_LOGON=$false }
 
 $tmpsam = $($EMAIL -replace '[^a-zA-Z0-9\.]', '')
 
-New-ADUser -HomeDrive "T:" `
-    -HomeDirectory $HOME_PATH  `
-    -UserPrincipalName "$EMAIL@ehps.com" `
-    -sAMAccountName $(if ($tmpsam.Length -gt 20) { $tmpsam.Substring(0, 20) } else { $tmpsam }) `
-    -GivenName $FNAME `
-    -Surname $LNAME `
-    -Name $("$FNAME $LNAME" -replace '[^a-zA-Z0-9\. ]', '') `
-    -Description $DESCRIPTION `
-    -EmailAddress "$EMAIL@ehps.k12.mt.us" `
-    -ScriptPath "logon.bat" `
-    -Path "$OU,DC=ehps,DC=com" `
-    -Enabled $true `
-    -ChangePasswordAtLogon $CHANGE_PASSWORD_AT_LOGON `
-    -AccountPassword (Read-Host -AsSecureString "Password") `
-    -PassThru |
+$splat = @{
+    HomeDrive             = "T:"
+    HomeDirectory         = $HOME_PATH
+    UserPrincipalName     = "$EMAIL@ehps.com"
+    sAMAccountName        = $(if ($tmpsam.Length -gt 20) { $tmpsam.Substring(0, 20) } else { $tmpsam })
+    GivenName             = $FNAME
+    Surname               = $LNAME
+    Name                  = $("$FNAME $LNAME" -replace '[^a-zA-Z0-9\. ]', '')
+    Description           = $DESCRIPTION
+    EmailAddress          = "$EMAIL@ehps.k12.mt.us"
+    ScriptPath            = "logon.bat"
+    Path                  = "$OU,DC=ehps,DC=com"
+    Enabled               = $true
+    ChangePasswordAtLogon = $CHANGE_PASSWORD_AT_LOGON
+    AccountPassword       = (Read-Host -AsSecureString "Password")
+}
+
+New-ADUser @splat -PassThru |
     ForEach-Object {
         ForEach ($G in $GROUPS) {
             Add-ADGroupMember -Identity $G -Members $_
         }
     }
-
 Write-Host "Done, you need to do any changes to the password manually."
