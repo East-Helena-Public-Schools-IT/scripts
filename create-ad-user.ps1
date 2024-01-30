@@ -135,7 +135,7 @@ $body = @{
     "password"="$PASSWD";
     "fname"="$FNAME";
     "lname"="$LNAME";
-    "APIKEY"="$(Get-Content .\.apikey)";
+    "APIKEY"="$(Get-Content .\.apikey.txt)";
     "gradyear"="$GRADY";
 }
 
