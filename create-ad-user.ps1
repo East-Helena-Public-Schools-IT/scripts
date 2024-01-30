@@ -3,6 +3,7 @@
 $FNAME=$null
 $LNAME=$null
 $GRADY=$null
+$PASSWD=$null
 # Calculate these later
 $EMAIL=$null
 $HOME_PATH=$null
@@ -103,6 +104,7 @@ else { $script:CHANGE_PASSWORD_AT_LOGON=$false }
 
 $tmpsam = $($EMAIL -replace '[^a-zA-Z0-9\.]', '')
 
+$PASSWD = Read-Host "Password"
 $splat = @{
     HomeDrive             = "T:"
     HomeDirectory         = $HOME_PATH
@@ -117,7 +119,7 @@ $splat = @{
     Path                  = "$OU,DC=ehps,DC=com"
     Enabled               = $true
     ChangePasswordAtLogon = $CHANGE_PASSWORD_AT_LOGON
-    AccountPassword       = (Read-Host -AsSecureString "Password")
+    AccountPassword       = (ConvertTo-SecureString -Force -AsPlainText $PASSWD)
 }
 
 New-ADUser @splat -PassThru |
@@ -127,3 +129,20 @@ New-ADUser @splat -PassThru |
         }
     }
 Write-Host "Done, you need to do any changes to the password manually."
+
+$body = @{
+    "email"="$EMAIL@ehps.k12.mt.us";
+    "password"="$PASSWD";
+    "fname"="$FNAME";
+    "lname"="$LNAME";
+    "APIKEY"="$(Get-Content .\.apikey)";
+    "gradyear"="$GRADY";
+}
+
+Invoke-WebRequest -URI https://script.google.com/macros/s/AKfycbxcy9MR2q1HATf3UqwUZa1tnihZRqB9Dd4x4nq-Hbk4dIo5jJUrpZVSesAxUK2uA-ey/exec -Method Post -ContentType "application/json" -Body ($body|ConvertTo-Json) | ForEach-Object {
+    if ($_.StatusCode -eq 200) {
+        Write-Host "Uploaded data to remote db"
+    } else {
+        Write-Error "Pushing data to remote db failed! (You'll have to upload it manually like a scrub)"
+    }
+}
