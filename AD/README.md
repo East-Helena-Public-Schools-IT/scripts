@@ -1,3 +1,2 @@
 # Active Directory (AD) integration
-This folder contains both [a script for creating users](./create-ad-user.ps1) in AD, and an [appscript](./appscript.js)
-for auto-loading information into a google sheet for our teachers to use as a referenece.
+This folder contains both [a script for creating users](./create-ad-user.ps1) in AD, and an [appscript](./appscript.js) for auto-loading information into a google sheet for our teachers to use as a referenece.
