@@ -42,7 +42,7 @@ function createSheet(name) {
 function isValidApiKey(checkKey) {
   checkKey = checkKey.trim()
 
-  // UUID length
+  // API key length
   if (checkKey.length != 36) {return false}
 
   const sheet = getSheet("master").getDataRange().getDisplayValues()
