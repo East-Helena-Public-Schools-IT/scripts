@@ -78,6 +78,24 @@ function Get-AccountType() {
                      "Eastgate", "Eastgate")
         $script:OU = "OU=$GRADY,OU=$($SCHOOLS[[int]$YTG]),OU=Students"
         $script:DESCRIPTION=$GRADY
+
+		$body = @{
+    		"email"="$EMAIL@ehps.k12.mt.us";
+    		"password"="$PASSWD";
+    		"fname"="$FNAME";
+    		"lname"="$LNAME";
+    		"APIKEY"="$(Get-Content .\.apikey.txt)";
+    		"gradyear"="$GRADY";
+		}
+
+		Write-Host "Uploading user to the Google Sheet"
+		Invoke-WebRequest -URI https://script.google.com/macros/s/AKfycbxcy9MR2q1HATf3UqwUZa1tnihZRqB9Dd4x4nq-Hbk4dIo5jJUrpZVSesAxUK2uA-ey/exec -Method Post -ContentType "application/json" -Body ($body|ConvertTo-Json) | ForEach-Object {
+    		if ($_.StatusCode -eq 200) {
+        		Write-Host "Uploaded data to remote db"
+    		} else {
+        		Write-Error "Pushing data to remote db failed! (You'll have to upload it manually like a scrub)"
+    		}
+		}
     }
     elseif ($ACCOUNTTYPE -match "3") {
         # Non-teaching staff
@@ -96,7 +114,6 @@ function Get-AccountType() {
 
 # Set-Name MUST come before Get-AccountType
 Set-Name
-Get-AccountType
 
 $CNG_PASS_RESPONSE = Read-host "Should user change password at next logon? [y/N]"
 if ($CNG_PASS_RESPONSE -match "(y|Y)") { $script:CHANGE_PASSWORD_AT_LOGON=$true }
@@ -105,6 +122,10 @@ else { $script:CHANGE_PASSWORD_AT_LOGON=$false }
 $tmpsam = $($EMAIL -replace '[^a-zA-Z0-9\.]', '')
 
 $PASSWD = Read-Host "Password"
+
+# Get AccountType MUST come after the all the variables are set.
+Get-AccountType
+
 $splat = @{
     HomeDrive             = "T:"
     HomeDirectory         = $HOME_PATH
@@ -130,19 +151,3 @@ New-ADUser @splat -PassThru |
     }
 Write-Host "Done, you need to do any changes to the password manually."
 
-$body = @{
-    "email"="$EMAIL@ehps.k12.mt.us";
-    "password"="$PASSWD";
-    "fname"="$FNAME";
-    "lname"="$LNAME";
-    "APIKEY"="$(Get-Content .\.apikey.txt)";
-    "gradyear"="$GRADY";
-}
-
-Invoke-WebRequest -URI https://script.google.com/macros/s/AKfycbxcy9MR2q1HATf3UqwUZa1tnihZRqB9Dd4x4nq-Hbk4dIo5jJUrpZVSesAxUK2uA-ey/exec -Method Post -ContentType "application/json" -Body ($body|ConvertTo-Json) | ForEach-Object {
-    if ($_.StatusCode -eq 200) {
-        Write-Host "Uploaded data to remote db"
-    } else {
-        Write-Error "Pushing data to remote db failed! (You'll have to upload it manually like a scrub)"
-    }
-}
