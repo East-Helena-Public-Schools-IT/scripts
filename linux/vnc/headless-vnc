@@ -2,7 +2,6 @@
 # "Monitor" dimensions
 width=1920
 height=1080
-# every time
 source $HOME/.bashrc
 Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
 gnome-shell --replace &
