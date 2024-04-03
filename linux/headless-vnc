@@ -1,0 +1,13 @@
+#!/bin/bash
+
+# Install 
+
+width=1920
+height=1080
+
+source /home/ubuntu/.bashrc
+export DISPLAY=:1
+Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
+gnome-shell --replace &
+x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth /home/$(whoami)/.vnc/passwd -rfbport 5900 -shared &
+
