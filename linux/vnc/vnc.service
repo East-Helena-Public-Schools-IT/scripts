@@ -7,6 +7,7 @@ Environment=DISPLAY=:1
 Environment=XDG_SESSION_TYPE=x11
 Environment=GDK_BACKEND=x11
 ExecStart=/bin/bash /usr/local/bin/headless-vnc
+Type=forking
 
 [Install]
 WantedBy=multi-user.target
