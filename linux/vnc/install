@@ -8,7 +8,7 @@ apt install xvfb gnome-shell x11vnc -y
 # Set VNC password
 printf "\n\nWhat should the VNC password be?\n"
 read -r PASSWD
-x11vnc -storepasswd $PASSWD ~/.vnc/passwd
+x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
 
 # Setup service
 service="/etc/systemd/system/vnc.service"

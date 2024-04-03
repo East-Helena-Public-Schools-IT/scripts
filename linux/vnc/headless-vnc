@@ -6,5 +6,5 @@ height=1080
 source $HOME/.bashrc
 Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
 gnome-shell --replace &
-x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth $HOME/.vnc/passwd -rfbport 5900 -shared &
+x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth /usr/local/vnc.passwd -rfbport 5900 -shared &
 
