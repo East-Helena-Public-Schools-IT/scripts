@@ -1,11 +1,4 @@
 #!/bin/bash
-
-# apt install xvfb gnome-shell x11vnc 
-
-# Make sure to run:
-# x11vnc -storepasswd ~/.vnc/passwd
-# before running this script
-
 # "Monitor" dimensions
 width=1920
 height=1080
