@@ -6,13 +6,11 @@
 # x11vnc -storepasswd ~/.vnc/passwd
 # before running this script
 
+# On install (assumed this will be root)
 # "Monitor" dimensions
 width=1920
 height=1080
-
-echo "export DISPLAY=:1" >> $HOME/.bashrc
-echo "export XDG_SESSION_TYPE=x11" >> $HOME/.bashrc
-echo "export GDK_BACKEND=x11" >> $HOME/.bashrc
+# every time
 source $HOME/.bashrc
 Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
 gnome-shell --replace &

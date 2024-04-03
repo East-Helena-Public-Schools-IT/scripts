@@ -1,0 +1,12 @@
+[Unit]
+Description=VNC server for headless linux
+After=network.service
+
+[Service]
+Environment=DISPLAY=:1
+Environment=XDG_SESSION_TYPE=x11
+Environment=GDK_BACKEND=x11
+ExecStart=/bin/bash /usr/local/bin/headless-vnc
+
+[Install]
+WantedBy=multi-user.target

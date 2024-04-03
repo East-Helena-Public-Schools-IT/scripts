@@ -1,0 +1,14 @@
+#!/bin/bash
+
+# Setup service
+service="/etc/systemd/system/vnc.service"
+curl "dont know the url yet" > $service
+chmod 664 $service
+
+# Download vnc script
+wget -P /usr/local/bin/ "new url"
+
+# Eanble service
+systemctl daemon-reload
+systemctl enable vnc
+systemctl start vnc
