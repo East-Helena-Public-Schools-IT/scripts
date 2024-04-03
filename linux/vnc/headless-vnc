@@ -4,6 +4,7 @@ width=1920
 height=1080
 source $HOME/.bashrc
 Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
+# You can also change this to things such as "firefox" to launch just firefox in the session.
 gnome-shell --replace &
 x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth /usr/local/vnc.passwd -rfbport 5900 -shared &
 
