@@ -1,5 +1,5 @@
 #!/bin/bash
-[ "$(id -u)" != 0 ] && echo "Rerun $0 as root"; exit
+# [ "$(id -u)" != 0 ] && echo "Rerun $0 as root"; exit
 
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 echo "Installing dependencies..."
@@ -23,3 +23,5 @@ chmod +x /usr/local/bin/headless-vnc
 systemctl daemon-reload
 systemctl enable vnc
 systemctl start vnc
+
+ufw allow 5900
