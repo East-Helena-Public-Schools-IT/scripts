@@ -2,11 +2,11 @@
 
 # Setup service
 service="/etc/systemd/system/vnc.service"
-curl "dont know the url yet" > $service
+curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/vnc.service > $service
 chmod 664 $service
 
 # Download vnc script
-wget -P /usr/local/bin/ "new url"
+wget -P /usr/local/bin/ https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc
 
 # Eanble service
 systemctl daemon-reload
