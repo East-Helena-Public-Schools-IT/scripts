@@ -12,6 +12,8 @@ height=1080
 
 echo "DISPLAY=:1" >> $HOME/.bashrc
 export DISPLAY=:1
+export XDG_SESSION_TYPE=x11
+export GDK_BACKEND=x11
 Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
 gnome-shell --replace &
 x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth $HOME/.vnc/passwd -rfbport 5900 -shared &
