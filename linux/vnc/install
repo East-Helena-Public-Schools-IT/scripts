@@ -16,8 +16,9 @@ curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/mai
 chmod 664 $service
 
 # Download vnc script
-wget -P /usr/local/bin/ https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc
-chmod +x /usr/local/bin/headless-vnc
+script="/usr/local/bin/headless-vnc"
+curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc > $script
+chmod +x $script
 
 # Eanble service
 systemctl daemon-reload
