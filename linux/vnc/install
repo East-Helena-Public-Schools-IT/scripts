@@ -1,4 +1,14 @@
 #!/bin/bash
+[ "$(id -u)" != 0 ] && echo "Rerun $0 as root"; exit
+
+# Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
+echo "Installing dependencies..."
+apt install xvfb gnome-shell x11vnc -y
+
+# Set VNC password
+printf "\n\nWhat should the VNC password be?\n"
+read -r PASSWD
+x11vnc -storepasswd $PASSWD ~/.vnc/passwd
 
 # Setup service
 service="/etc/systemd/system/vnc.service"

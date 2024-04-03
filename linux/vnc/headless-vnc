@@ -6,7 +6,6 @@
 # x11vnc -storepasswd ~/.vnc/passwd
 # before running this script
 
-# On install (assumed this will be root)
 # "Monitor" dimensions
 width=1920
 height=1080
