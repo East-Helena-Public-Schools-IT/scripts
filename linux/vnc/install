@@ -4,8 +4,8 @@
 echo "Installing dependencies..."
 # Needed for minimal vnc installation
 apt install xvfb x11vnc dbus-x11 -y
-# Not technically needed, but are nice
-apt install xfce4 -y
+# Not technically needed, but you want them
+apt install xfce4 xdg-utils -y
 apt install firefox -y
 
 # Set VNC password
