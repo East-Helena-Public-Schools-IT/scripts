@@ -37,6 +37,18 @@ echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config
 # Create .xinit file
 su --login $vncuser -c 'cp /etc/X11/xinit/xinitrc ~/.xinitrc'
 
+# Give user more perms
+mkdir -p /etc/polkit-1/localauthority/50-local.d/
+# BTW thank you u/cubic_thought
+printf "
+[Allow Colord all Users]
+Identity=unix-user:*
+Action=org.freedesktop.color-manager.create-device;org.freedesktop.color-manager.create-profile;org.freedesktop.color-manager.delete-device;org.freedesktop.color-manager.delete-profile;org.freedesktop.color-manager.modify-device;org.freedesktop.color-manager.modify-profile
+ResultAny=no
+ResultInactive=no
+ResultActive=yes
+" > /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
+
 # Eanble service
 systemctl daemon-reload
 systemctl enable vnc
