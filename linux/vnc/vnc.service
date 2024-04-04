@@ -3,6 +3,8 @@ Description=VNC server for headless linux
 After=network.service
 
 [Service]
+User=vncuser
+Group=vncuser
 Environment=DISPLAY=:1
 Environment=XDG_SESSION_TYPE=x11
 Environment=GDK_BACKEND=x11
