@@ -3,14 +3,13 @@
 # Syntax
 # ./install PASSWORD
 
-PASSWD=""
 if [[ -z $1 ]]; then
 	# Running in interactive mode
 	printf "\n\nWhat should the VNC password be?\n"
 	read -r input
-	$PASSWD=$input
+	PASSWD="$input"
 else
-	$PASSWD="$1"
+	PASSWD="$1"
 fi
 
 export NEEDRESTART_MODE=a
@@ -18,9 +17,6 @@ export NEEDRESTART_MODE=a
 echo "Installing dependencies..."
 # Needed for minimal vnc installation
 apt install xvfb x11vnc dbus-x11 -y
-# Not technically needed, but you want them
-apt install xfce4 xdg-utils -y
-apt install firefox -y
 
 # Set VNC password
 x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
@@ -41,6 +37,9 @@ chmod +x $script
 vncuser="vncuser"
 useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash -p "$(openssl passwd -6 $PASSWD)"
 loginctl enable-linger $vncuser
+
+# After any user-interaction would happen
+apt install xfce4 xdg-utils firefox -y
 
 # Allow user to startx
 echo "allowed_users = anybody" > /etc/X11/Xwrapper.config
@@ -75,8 +74,8 @@ systemctl enable vnc
 
 ufw allow 5900
 
-printf "\n====================\n\t\tDone!\n====================\n"
-printf "\n====================\n\t\tRebooting...\n====================\n"
+printf "\n====================\n\tDone!\n====================\n"
+printf "\n====================\n\tRebooting...\n====================\n"
 
 shutdown -r now
 
