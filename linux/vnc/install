@@ -74,4 +74,8 @@ systemctl enable vnc
 
 ufw allow 5900
 
-printf "\n====================\nDone!\n====================\n"
+printf "\n====================\n\t\tDone!\n====================\n"
+printf "\n====================\n\t\tRebooting...\n====================\n"
+
+shutdown -r now
+
