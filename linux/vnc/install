@@ -3,7 +3,7 @@
 
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 echo "Installing dependencies..."
-apt install xvfb gnome-shell x11vnc -y
+apt install xvfb gnome-shell x11vnc dbus-x11 -y
 
 # Set VNC password
 printf "\n\nWhat should the VNC password be?\n"
@@ -19,6 +19,10 @@ chmod 664 $service
 script="/usr/local/bin/headless-vnc"
 curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc > $script
 chmod +x $script
+
+# Create user
+# useradd --create-home vncuser -G sudo --user-group --shell /bin/bash
+# passwd vncuser
 
 # Eanble service
 systemctl daemon-reload
