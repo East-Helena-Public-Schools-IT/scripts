@@ -1,5 +1,19 @@
 #!/bin/bash
 
+# Syntax
+# ./install PASSWORD
+
+PASSWD=""
+if [[ -z $1 ]]; then
+	# Running in interactive mode
+	printf "\n\nWhat should the VNC password be?\n"
+	read -r input
+	$PASSWD=$input
+else
+	$PASSWD=$1
+fi
+
+
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 echo "Installing dependencies..."
 # Needed for minimal vnc installation
@@ -9,9 +23,6 @@ apt install xfce4 xdg-utils -y
 apt install firefox -y
 
 # Set VNC password
-printf "\n\nWhat should the VNC password be?\n"
-# TODO pass this in as an arg
-read -r PASSWD
 x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
 # make sure the vncuser can access it
 chmod a=r /usr/local/vnc.passwd
@@ -62,3 +73,5 @@ systemctl daemon-reload
 systemctl enable vnc
 
 ufw allow 5900
+
+printf "\n====================\nDone!\n====================\n"
