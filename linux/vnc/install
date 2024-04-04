@@ -13,7 +13,7 @@ else
 	$PASSWD=$1
 fi
 
-
+export NEEDRESTART_MODE=a
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 echo "Installing dependencies..."
 # Needed for minimal vnc installation
