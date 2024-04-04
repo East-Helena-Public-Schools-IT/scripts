@@ -40,6 +40,7 @@ chmod +x $script
 # Create user. If you chagne from vncuser you must also change it in the service file
 vncuser="vncuser"
 useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash -p "$(openssl passwd -6 $PASSWD)"
+loginctl enable-linger $vncuser
 
 # Allow user to startx
 echo "allowed_users = anybody" > /etc/X11/Xwrapper.config
