@@ -10,7 +10,7 @@ if [[ -z $1 ]]; then
 	read -r input
 	$PASSWD=$input
 else
-	$PASSWD=$1
+	$PASSWD="$1"
 fi
 
 export NEEDRESTART_MODE=a
