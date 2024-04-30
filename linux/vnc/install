@@ -12,8 +12,8 @@ else
 	PASSWD="$1"
 fi
 
-export NEEDRESTART_MODE=a
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
+export NEEDRESTART_MODE=a
 echo "Installing dependencies..."
 # Needed for minimal vnc installation
 apt install xvfb x11vnc dbus-x11 -y
@@ -23,8 +23,15 @@ x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
 # make sure the vncuser can access it
 chmod a=r /usr/local/vnc.passwd
 
+# Create user
+# If you chagne from vncuser you must also change it in the service file
+vncuser="vncuser"
+useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash -p "$(openssl passwd -6 $PASSWD)"
+loginctl enable-linger $vncuser
+
 # Setup service
-service="/etc/systemd/system/vnc.service"
+service="/home/$vncuser/.local/share/systemd/user/vnc.service"
+mkdir -p $(dirname $service)
 curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/vnc.service > $service
 chmod 664 $service
 
@@ -32,11 +39,6 @@ chmod 664 $service
 script="/usr/local/bin/headless-vnc"
 curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc > $script
 chmod +x $script
-
-# Create user. If you chagne from vncuser you must also change it in the service file
-vncuser="vncuser"
-useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash -p "$(openssl passwd -6 $PASSWD)"
-loginctl enable-linger $vncuser
 
 # After any user-interaction would happen
 apt install xfce4 xdg-utils firefox -y
@@ -55,7 +57,7 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 " >> ~/.bashrc'
 
-
+# TODO pretty sure this doesn't work
 # Give user more perms
 mkdir -p /etc/polkit-1/localauthority/50-local.d/
 # BTW thank you u/cubic_thought
@@ -68,11 +70,11 @@ ResultInactive=no
 ResultActive=yes
 " > /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
 
+ufw allow 5900
+
 # Eanble service
 systemctl daemon-reload
-systemctl enable vnc
-
-ufw allow 5900
+su --login $vncuser -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u $vncuser)\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=$XDG_SESSION_TYPE/bus\" systemctl --user enable vnc"
 
 printf "\n====================\n\tDone!\n====================\n"
 printf "\n====================\n\tRebooting...\n====================\n"

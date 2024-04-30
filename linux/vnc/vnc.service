@@ -12,4 +12,4 @@ ExecStart=/bin/bash /usr/local/bin/headless-vnc
 Type=forking
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
