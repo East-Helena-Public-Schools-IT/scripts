@@ -12,11 +12,11 @@ else
 	PASSWD="$1"
 fi
 
+echo "Installing dependencies..."
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 export NEEDRESTART_MODE=a
-echo "Installing dependencies..."
-# Needed for minimal vnc installation
-apt install xvfb x11vnc dbus-x11 -y
+export DEBIAN_FRONTEND=noninteractive
+apt install xvfb x11vnc dbus-x11 xfce4 xdg-utils firefox -y
 
 # Set VNC password
 x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
@@ -39,9 +39,6 @@ chmod 664 $service
 script="/usr/local/bin/headless-vnc"
 curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc > $script
 chmod +x $script
-
-# After any user-interaction would happen
-apt install xfce4 xdg-utils firefox -y
 
 # Allow user to startx
 echo "allowed_users = anybody" > /etc/X11/Xwrapper.config
@@ -70,6 +67,7 @@ ResultInactive=no
 ResultActive=yes
 " > /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
 
+ufw enable
 ufw allow 5900
 
 # Eanble service
