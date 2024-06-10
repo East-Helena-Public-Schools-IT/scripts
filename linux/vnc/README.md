@@ -8,3 +8,6 @@ chmod +x install
 sudo su
 ./install
 ```
+
+## Notes:
+According to [this reddit page](https://www.reddit.com/r/linux4noobs/comments/hq7i1v/how_do_i_start_x11vnc_at_startup_and_keep_it/) you can launch into lightdm with vnc. Might do this later, but for now it just has a vnc password.
