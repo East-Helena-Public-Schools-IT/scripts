@@ -16,7 +16,13 @@ echo "Installing dependencies..."
 # Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
 export NEEDRESTART_MODE=a
 export DEBIAN_FRONTEND=noninteractive
-apt install xvfb x11vnc dbus-x11 xfce4 xdg-utils firefox -y
+
+add-apt-repository ppa:apt-fast/stable -y
+apt update
+apt install apt-fast -y
+echo debconf apt-fast/maxdownloads string $(nproc) | debconf-set-selections
+
+apt-fast install xvfb x11vnc dbus-x11 xfce4 xdg-utils firefox -y
 
 # Set VNC password
 x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
@@ -30,7 +36,7 @@ useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash 
 loginctl enable-linger $vncuser
 
 # Setup service
-service="/home/$vncuser/.local/share/systemd/user/vnc.service"
+service="/lib/systemd/system/vnc.service"
 mkdir -p $(dirname $service)
 curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/vnc.service > $service
 chmod 664 $service
@@ -54,28 +60,15 @@ export XDG_RUNTIME_DIR=/run/user/$(id -u)
 export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
 " >> ~/.bashrc'
 
-# TODO pretty sure this doesn't work
-# Give user more perms
-mkdir -p /etc/polkit-1/localauthority/50-local.d/
-# BTW thank you u/cubic_thought
-printf "
-[Allow Colord all Users]
-Identity=unix-user:*
-Action=org.freedesktop.color-manager.create-device;org.freedesktop.color-manager.create-profile;org.freedesktop.color-manager.delete-device;org.freedesktop.color-manager.delete-profile;org.freedesktop.color-manager.modify-device;org.freedesktop.color-manager.modify-profile
-ResultAny=no
-ResultInactive=no
-ResultActive=yes
-" > /etc/polkit-1/localauthority/50-local.d/45-allow-colord.pkla
-
-ufw enable
+ufw allow 22
 ufw allow 5900
+echo y | ufw enable
 
 # Eanble service
 systemctl daemon-reload
-su --login $vncuser -c "XDG_RUNTIME_DIR=\"/run/user/$(id -u $vncuser)\" DBUS_SESSION_BUS_ADDRESS=\"unix:path=$XDG_SESSION_TYPE/bus\" systemctl --user enable vnc"
+systemctl enable vnc
 
 printf "\n====================\n\tDone!\n====================\n"
 printf "\n====================\n\tRebooting...\n====================\n"
 
 shutdown -r now
-
