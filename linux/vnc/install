@@ -1,0 +1,74 @@
+#!/bin/bash
+
+# Syntax
+# ./install PASSWORD
+
+if [[ -z $1 ]]; then
+	# Running in interactive mode
+	printf "\n\nWhat should the VNC password be?\n"
+	read -r input
+	PASSWD="$input"
+else
+	PASSWD="$1"
+fi
+
+echo "Installing dependencies..."
+# Make sure the packages are installed (even with the -y flag it may still require user input, because apt is dumb like that)
+export NEEDRESTART_MODE=a
+export DEBIAN_FRONTEND=noninteractive
+
+add-apt-repository ppa:apt-fast/stable -y
+apt update
+apt install apt-fast -y
+echo debconf apt-fast/maxdownloads string $(nproc) | debconf-set-selections
+
+apt-fast install xvfb x11vnc dbus-x11 xfce4 xdg-utils firefox -y
+
+# Set VNC password
+x11vnc -storepasswd $PASSWD /usr/local/vnc.passwd
+# make sure the vncuser can access it
+chmod a=r /usr/local/vnc.passwd
+
+# Create user
+# If you chagne from vncuser you must also change it in the service file
+vncuser="vncuser"
+useradd --create-home $vncuser -G sudo,video,tty --user-group --shell /bin/bash -p "$(openssl passwd -6 $PASSWD)"
+loginctl enable-linger $vncuser
+
+# Setup service
+service="/lib/systemd/system/vnc.service"
+mkdir -p $(dirname $service)
+curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/vnc.service > $service
+chmod 664 $service
+
+# Download vnc script
+script="/usr/local/bin/headless-vnc"
+curl https://raw.githubusercontent.com/East-Helena-Public-Schools-IT/scripts/main/linux/vnc/headless-vnc > $script
+chmod +x $script
+
+# Allow user to startx
+echo "allowed_users = anybody" > /etc/X11/Xwrapper.config
+echo "needs_root_rights=yes" >> /etc/X11/Xwrapper.config
+
+# Create dotfiles 
+su --login $vncuser -c 'cp /etc/X11/xinit/xinitrc ~/.xinitrc'
+su --login $vncuser -c 'printf "
+export DISPLAY=:1
+export XDG_SESSION_TYPE=x11
+export GDK_BACKEND=x11
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
+export DBUS_SESSION_BUS_ADDRESS=unix:path=/run/user/1000/bus
+" >> ~/.bashrc'
+
+ufw allow 22
+ufw allow 5900
+echo y | ufw enable
+
+# Eanble service
+systemctl daemon-reload
+systemctl enable vnc
+
+printf "\n====================\n\tDone!\n====================\n"
+printf "\n====================\n\tRebooting...\n====================\n"
+
+shutdown -r now

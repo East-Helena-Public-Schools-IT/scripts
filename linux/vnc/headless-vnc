@@ -1,0 +1,8 @@
+#!/bin/bash
+# "Monitor" dimensions
+width=1920
+height=1080
+source $HOME/.bashrc
+Xvfb $DISPLAY -screen 0 ${width}x${height}x16 &
+x11vnc -display $DISPLAY -forever -loop -noxdamage -repeat -rfbauth /usr/local/vnc.passwd -rfbport 5900 -shared -wireframe -xkb -ncache &
+startxfce4 &
